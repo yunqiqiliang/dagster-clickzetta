@@ -1,11 +1,32 @@
 version: 2
 
 sources:
-  - name: postgres_replica
-    database: postgres_replica
-    schema: public
+  - name: ql_ws
+    database: ql_ws
+    schema: modern_data_stack
     tables:
       - name: orders
         identifier: _airbyte_raw_orders
+        description: "订单表，包含所有订单数据。"
       - name: users
         identifier: _airbyte_raw_users
+        description: "用户表，包含用户信息。"
+      - name: departments
+        identifier: departments
+        description: "员工信息，departments table"
+      - name: dept_emp
+        identifier: dept_emp
+        description: "员工信息，dept_emp table"
+      - name: dept_manager
+        identifier: dept_manager
+        description: "员工信息，dept_manager table"
+      - name: employees
+        identifier: employees
+        description: "员工信息，employees table"
+      - name: salaries
+        identifier: salaries
+        description: "员工信息，salaries table"
+      - name: titles
+        identifier: titles
+        description: "员工信息，titles table"
+      

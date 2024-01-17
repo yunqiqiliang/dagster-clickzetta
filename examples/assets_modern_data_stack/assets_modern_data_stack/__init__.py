@@ -20,7 +20,7 @@ defs = Definitions(
     schedules=[
         # update all assets once a day
         ScheduleDefinition(
-            job=define_asset_job("all_assets", selection="*"), cron_schedule="@daily"
+            job=define_asset_job("all_assets", selection="*"), cron_schedule="@hourly"
         ),
     ],
 )

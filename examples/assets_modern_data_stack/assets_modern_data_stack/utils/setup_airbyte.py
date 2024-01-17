@@ -15,8 +15,8 @@ from dagster_postgres.utils import get_conn_string
 from .constants import PG_DESTINATION_CONFIG, PG_SOURCE_CONFIG
 
 # configures the number of records for each table
-N_USERS = 100
-N_ORDERS = 10000
+N_USERS = 1000
+N_ORDERS = 100000
 
 
 def _safe_request(
@@ -90,7 +90,7 @@ def _create_ab_destination(client: AirbyteResource) -> str:
 
 
 def setup_airbyte():
-    client = AirbyteResource(host="localhost", port="8000", use_https=False)
+    client = AirbyteResource(host="172.17.1.220", port="8000", use_https=False,username="airbyte",password="password")
     source_id = _create_ab_source(client)
     destination_id = _create_ab_destination(client)
 
@@ -114,10 +114,34 @@ def setup_airbyte():
 
     print(f"Created Airbyte Connection: {connection_id}")
 
+def create_airbyte_connection():
+    client = AirbyteResource(host="172.17.1.220", port="8000", use_https=False,username="airbyte",password="password")
+    source_id = "14919486-07e5-4409-8700-d3b2b6691b60"
+    destination_id = "fea68fb2-90cb-4ad5-9d48-577c2fc43e3b"
+
+    source_catalog = _safe_request(
+        client, "/sources/discover_schema", data={"sourceId": source_id}
+    )["catalog"]
+
+    # create a connection between the new source and destination
+    connection_id = _safe_request(
+        client,
+        "/connections/create",
+        data={
+            "name": "Example Connection",
+            "sourceId": source_id,
+            "destinationId": destination_id,
+            "syncCatalog": source_catalog,
+            "prefix": "",
+            "status": "active",
+        },
+    )["connectionId"]
+
+    print(f"Created Airbyte Connection: {connection_id}")
 
 def _random_dates():
-    start = pd.to_datetime("2021-01-01")
-    end = pd.to_datetime("2022-01-01")
+    start = pd.to_datetime("2022-01-01")
+    end = pd.to_datetime("2023-01-15")
 
     start_u = start.value // 10**9
     end_u = end.value // 10**9
@@ -167,4 +191,5 @@ def add_data():
 
 
 add_data()
-setup_airbyte()
+# setup_airbyte()
+# create_airbyte_connection()

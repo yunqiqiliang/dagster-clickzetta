@@ -1,5 +1,5 @@
 select
-        date_trunc('d', oc.order_time::timestamp) as order_date,
+        date_trunc('DAY', oc.order_time::timestamp) as order_date,
         sum(oc.order_value) as total_value,
         count(*) as num_orders
 from
